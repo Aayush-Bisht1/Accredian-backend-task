@@ -12,7 +12,10 @@ const prisma = new PrismaClient();
 const upload = multer();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -80,8 +83,8 @@ app.post("/api/referral", upload.none(), async (req, res) => {
       data: referral,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Error in /api/referral:", error); 
+    res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 });
 
