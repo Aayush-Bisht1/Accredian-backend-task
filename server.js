@@ -8,13 +8,20 @@ dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
+prisma.$connect()
+  .then(() => console.log("Database connected successfully"))
+  .catch(err => {
+    console.error("Database connection error:", err);
+    process.exit(1); 
+  });
 
 const upload = multer();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'https://accredian-frontend-task-dun-six.vercel.app',
-  credentials: true
+  origin: ['https://accredian-frontend-task-dun-six.vercel.app','http://localhost:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS']
 }));
 
 const transporter = nodemailer.createTransport({
