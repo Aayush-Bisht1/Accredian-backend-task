@@ -7,7 +7,12 @@ import multer from "multer";
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+try {
+  const prisma = new PrismaClient();
+  console.log("Prisma Client initialized successfully");
+} catch (error) {
+  console.error("Prisma Client initialization failed:", error);
+}
 
 const upload = multer();
 app.use(express.json());
