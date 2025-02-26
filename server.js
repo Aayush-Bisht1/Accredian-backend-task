@@ -7,12 +7,7 @@ import multer from "multer";
 dotenv.config();
 
 const app = express();
-try {
-  const prisma = new PrismaClient();
-  console.log("Prisma Client initialized successfully");
-} catch (error) {
-  console.error("Prisma Client initialization failed:", error);
-}
+const prisma = new PrismaClient();
 
 const upload = multer();
 app.use(express.json());
@@ -31,6 +26,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/api/referral", upload.none(), async (req, res) => {
+  console.log("Request body:", req.body);
   try {
     const {
       referrerName,
@@ -40,6 +36,15 @@ app.post("/api/referral", upload.none(), async (req, res) => {
       recipientPhone,
       course,
     } = req.body;
+    console.log("Received data:", {
+      referrerName,
+      referrerEmail,
+      recipientName,
+      recipientEmail,
+      recipientPhone,
+      course,
+    });
+
     if (
       !referrerName ||
       !referrerEmail ||
@@ -61,6 +66,7 @@ app.post("/api/referral", upload.none(), async (req, res) => {
         createdAt: new Date(),
       },
     });
+    console.log("Referral created:", referral);
     try {
       const mailOptions = {
         from: `"Referral System" <${process.env.EMAIL_USERNAME}>`,
